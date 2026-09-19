@@ -4,6 +4,7 @@ const input = document.querySelector("#todo-input");
 const list = document.querySelector("#todo-list");
 const emptyState = document.querySelector("#empty-state");
 const remainingCount = document.querySelector("#remaining-count");
+const clearCompletedButton = document.querySelector("#clear-completed");
 const themeToggle = document.querySelector("#theme-toggle");
 const filterButtons = document.querySelectorAll(".filter-button");
 const THEME_KEY = "offline-todos-theme";
@@ -107,8 +108,19 @@ function renderTodos() {
   });
 
   const remaining = todos.filter((todo) => !todo.completed).length;
+  const completedCount = todos.length - remaining;
   remainingCount.textContent = `未完成：${remaining} 項`;
+  clearCompletedButton.disabled = completedCount === 0;
 }
+
+clearCompletedButton.addEventListener("click", () => {
+  const hasCompletedTodos = todos.some((todo) => todo.completed);
+  if (!hasCompletedTodos || !confirm("確定要清除所有已完成的待辦事項嗎？")) return;
+
+  todos = todos.filter((todo) => !todo.completed);
+  saveTodos();
+  renderTodos();
+});
 
 filterButtons.forEach((button) => {
   button.addEventListener("click", () => {
