@@ -56,6 +56,13 @@ function saveTodos() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
 }
 
+function getEmptyMessage() {
+  if (todos.length === 0) return "還沒有任何待辦事項，新增一個吧！";
+  if (activeFilter === "active") return "目前沒有未完成的事項，其他項目可能只是被篩選條件隱藏。";
+  if (activeFilter === "completed") return "目前沒有已完成的事項，其他項目可能只是被篩選條件隱藏。";
+  return "目前沒有符合篩選條件的事項。";
+}
+
 function renderTodos() {
   const visibleTodos = todos.filter((todo) => {
     if (activeFilter === "active") return !todo.completed;
@@ -65,11 +72,7 @@ function renderTodos() {
 
   list.replaceChildren();
   emptyState.hidden = visibleTodos.length > 0;
-  emptyState.textContent = todos.length === 0
-    ? "還沒有任何待辦事項，新增一個吧！"
-    : activeFilter === "active"
-      ? "太棒了！目前沒有未完成事項。"
-      : "目前沒有已完成事項。";
+  emptyState.textContent = getEmptyMessage();
 
   visibleTodos.forEach((todo) => {
     const item = document.createElement("li");
