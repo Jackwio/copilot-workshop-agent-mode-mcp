@@ -4,6 +4,7 @@ const input = document.querySelector("#todo-input");
 const list = document.querySelector("#todo-list");
 const emptyState = document.querySelector("#empty-state");
 const remainingCount = document.querySelector("#remaining-count");
+const clearCompletedButton = document.querySelector("#clear-completed");
 const themeToggle = document.querySelector("#theme-toggle");
 const filterButtons = document.querySelectorAll(".filter-button");
 const THEME_KEY = "offline-todos-theme";
@@ -56,6 +57,13 @@ function saveTodos() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
 }
 
+function getEmptyMessage() {
+  if (todos.length === 0) return "還沒有任何待辦事項，新增一個吧！";
+  if (activeFilter === "active") return "目前沒有未完成的事項，其他項目可能只是被篩選條件隱藏。";
+  if (activeFilter === "completed") return "目前沒有已完成的事項，其他項目可能只是被篩選條件隱藏。";
+  return "目前沒有符合篩選條件的事項。";
+}
+
 function renderTodos() {
   const visibleTodos = todos.filter((todo) => {
     if (activeFilter === "active") return !todo.completed;
@@ -65,11 +73,7 @@ function renderTodos() {
 
   list.replaceChildren();
   emptyState.hidden = visibleTodos.length > 0;
-  emptyState.textContent = todos.length === 0
-    ? "還沒有任何待辦事項，新增一個吧！"
-    : activeFilter === "active"
-      ? "太棒了！目前沒有未完成事項。"
-      : "目前沒有已完成事項。";
+  emptyState.textContent = getEmptyMessage();
 
   visibleTodos.forEach((todo) => {
     const item = document.createElement("li");
@@ -107,8 +111,19 @@ function renderTodos() {
   });
 
   const remaining = todos.filter((todo) => !todo.completed).length;
+  const completedCount = todos.length - remaining;
   remainingCount.textContent = `未完成：${remaining} 項`;
+  clearCompletedButton.disabled = completedCount === 0;
 }
+
+clearCompletedButton.addEventListener("click", () => {
+  const hasCompletedTodos = todos.some((todo) => todo.completed);
+  if (!hasCompletedTodos || !confirm("確定要清除所有已完成的待辦事項嗎？")) return;
+
+  todos = todos.filter((todo) => !todo.completed);
+  saveTodos();
+  renderTodos();
+});
 
 filterButtons.forEach((button) => {
   button.addEventListener("click", () => {
