@@ -1,13 +1,67 @@
 :root {
   --background: #eef3f1;
   --card: #fffdf9;
+  --input-background: #ffffff;
+  --header-background: linear-gradient(135deg, #fffdf9 0%, #f4f8f3 100%);
   --ink: #203332;
   --muted: #71817d;
   --line: #dce6e2;
   --accent: #e36d4b;
   --accent-dark: #c95335;
   --done: #9aa8a4;
+  --button-text: #ffffff;
+  --soft-accent: #fff0eb;
   --shadow: 0 22px 55px rgba(42, 71, 65, 0.13);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #182321;
+    --card: #24322f;
+    --input-background: #1c2927;
+    --header-background: linear-gradient(135deg, #24322f 0%, #1d2a28 100%);
+    --ink: #edf4f0;
+    --muted: #a8b8b2;
+    --line: #3b4b47;
+    --accent: #f28a68;
+    --accent-dark: #ff9d7d;
+    --done: #80938c;
+    --button-text: #1d2926;
+    --soft-accent: #49332d;
+    --shadow: 0 22px 55px rgba(0, 0, 0, 0.3);
+  }
+}
+
+:root[data-theme="light"] {
+  --background: #eef3f1;
+  --card: #fffdf9;
+  --input-background: #ffffff;
+  --header-background: linear-gradient(135deg, #fffdf9 0%, #f4f8f3 100%);
+  --ink: #203332;
+  --muted: #71817d;
+  --line: #dce6e2;
+  --accent: #e36d4b;
+  --accent-dark: #c95335;
+  --done: #9aa8a4;
+  --button-text: #ffffff;
+  --soft-accent: #fff0eb;
+  --shadow: 0 22px 55px rgba(42, 71, 65, 0.13);
+}
+
+:root[data-theme="dark"] {
+  --background: #182321;
+  --card: #24322f;
+  --input-background: #1c2927;
+  --header-background: linear-gradient(135deg, #24322f 0%, #1d2a28 100%);
+  --ink: #edf4f0;
+  --muted: #a8b8b2;
+  --line: #3b4b47;
+  --accent: #f28a68;
+  --accent-dark: #ff9d7d;
+  --done: #80938c;
+  --button-text: #1d2926;
+  --soft-accent: #49332d;
+  --shadow: 0 22px 55px rgba(0, 0, 0, 0.3);
 }
 
 * {
@@ -29,14 +83,41 @@ body {
   width: min(100%, 520px);
   overflow: hidden;
   background: var(--card);
-  border: 1px solid rgba(220, 230, 226, 0.8);
+  border: 1px solid var(--line);
   border-radius: 24px;
   box-shadow: var(--shadow);
 }
 
 .todo-header {
   padding: 38px 38px 28px;
-  background: linear-gradient(135deg, #fffdf9 0%, #f4f8f3 100%);
+  background: var(--header-background);
+}
+
+.title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.theme-toggle {
+  flex: 0 0 auto;
+  padding: 8px 10px;
+  color: var(--muted);
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  transition: color 160ms ease, background-color 160ms ease;
+}
+
+.theme-toggle:hover,
+.theme-toggle:focus-visible {
+  color: var(--ink);
+  background: var(--input-background);
 }
 
 .eyebrow {
@@ -66,7 +147,7 @@ h1 {
   display: flex;
   gap: 10px;
   padding: 0 38px 26px;
-  background: linear-gradient(135deg, #fffdf9 0%, #f4f8f3 100%);
+  background: var(--header-background);
 }
 
 .todo-form input {
@@ -74,7 +155,7 @@ h1 {
   flex: 1;
   padding: 14px 16px;
   color: var(--ink);
-  background: #ffffff;
+  background: var(--input-background);
   border: 1px solid var(--line);
   border-radius: 12px;
   outline: none;
@@ -96,7 +177,7 @@ h1 {
 
 .todo-form button {
   padding: 0 20px;
-  color: #ffffff;
+  color: var(--button-text);
   background: var(--accent);
   border-radius: 12px;
   font-weight: 700;
@@ -106,6 +187,33 @@ h1 {
 .todo-form button:focus-visible {
   background: var(--accent-dark);
   transform: translateY(-1px);
+}
+
+.filter-bar {
+  display: flex;
+  gap: 8px;
+  padding: 0 38px 16px;
+  background: var(--header-background);
+}
+
+.filter-button {
+  padding: 7px 13px;
+  color: var(--muted);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.84rem;
+  transition: color 160ms ease, background-color 160ms ease, border-color 160ms ease;
+}
+
+.filter-button:hover,
+.filter-button:focus-visible,
+.filter-button.active {
+  color: var(--accent-dark);
+  background: var(--soft-accent);
+  border-color: var(--accent);
 }
 
 .todo-section {
@@ -172,7 +280,7 @@ h1 {
 .delete-button:hover,
 .delete-button:focus-visible {
   color: var(--accent-dark);
-  background: #fff0eb;
+  background: var(--soft-accent);
 }
 
 .empty-state {
@@ -209,6 +317,7 @@ h1 {
 
   .todo-header,
   .todo-form,
+  .filter-bar,
   .todo-section,
   .todo-footer {
     padding-left: 22px;
